@@ -11,3 +11,5 @@ artifacts:
   files:
     - myapp.jar
     - appspec.yml
+    - 'scripts/**'
+    - 'scripts/*'
