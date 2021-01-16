@@ -23,7 +23,7 @@ public class BeanstalkDemoApplication {
     String port = System.getenv("PORT");
     String serverPort = System.getenv("SERVER_PORT");
     String managementServerPort = System.getenv("MANAGEMENT_SERVER_PORT");
-    String response = String.format("Hello Beanstalk - %s<br>$PORT=%s<br>$SERVER_PORT=%s<br>$MANAGEMENT_SERVER_PORT=%s",
+    String response = String.format("Hello Beanstalk - v2 - %s<br>$PORT=%s<br>$SERVER_PORT=%s<br>$MANAGEMENT_SERVER_PORT=%s",
         id,
         port,
         serverPort,

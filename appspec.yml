@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: /myapp.jar
-    destination: /opt/myapp/myapp.jar
+    destination: /opt/myapp
 hooks:
   AfterInstall:
     - location: scripts/start_server.sh
