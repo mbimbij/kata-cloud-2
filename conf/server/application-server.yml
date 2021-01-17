@@ -1,0 +1,20 @@
+server:
+  port: 8080
+
+app:
+  database:
+    secretName: /my-app/dev/db-password
+    urlPropName: /my-app/dev/db-url
+    usernamePropName: /my-app/dev/db-username
+
+spring:
+  datasource:
+    url:
+    username:
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
