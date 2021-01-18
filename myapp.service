@@ -1,0 +1,11 @@
+[Unit]
+Description=myapp
+After=syslog.target
+
+[Service]
+User=ubuntu
+ExecStart=java -Dloader.path=conf -Dspring.profiles.active=server -jar /opt/myapp/myapp.jar
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target

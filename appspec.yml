@@ -4,6 +4,13 @@ files:
   - source: /myapp.jar
     destination: /opt/myapp
 hooks:
+  BeforeInstall:
+    - location: scripts/copy_service_file.sh
+      timeout: 5
+      runas: root
+    - location: scripts/copy_application_configuration.sh
+      timeout: 5
+      runas: root
   AfterInstall:
     - location: scripts/start_server.sh
       timeout: 5
