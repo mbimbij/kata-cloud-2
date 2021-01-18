@@ -4,7 +4,7 @@ After=syslog.target
 
 [Service]
 User=ubuntu
-ExecStart=java -Dloader.path=conf -Dspring.profiles.active=server -jar /opt/myapp/myapp.jar
+ExecStart=java -Dloader.path=/opt/myapp/conf -Dspring.profiles.active=server -jar /opt/myapp/myapp.jar
 SuccessExitStatus=143
 
 [Install]

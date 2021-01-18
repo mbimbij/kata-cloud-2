@@ -12,5 +12,5 @@ artifacts:
     - myapp.jar
     - appspec.yml
     - 'scripts/*'
-    - conf/server
+    - 'conf/server/*'
     - myapp.service

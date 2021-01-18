@@ -1,14 +1,15 @@
 version: 0.0
 os: linux
 files:
+  - source: /myapp.service
+    destination: /etc/systemd/system
+  - source: /conf/server/application-server.yml
+    destination: /opt/myapp/conf
   - source: /myapp.jar
     destination: /opt/myapp
 hooks:
   BeforeInstall:
-    - location: scripts/copy_service_file.sh
-      timeout: 5
-      runas: root
-    - location: scripts/copy_application_configuration.sh
+    - location: scripts/before_install.sh
       timeout: 5
       runas: root
   AfterInstall:
