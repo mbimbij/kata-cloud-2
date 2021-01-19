@@ -1,0 +1,20 @@
+{
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "access_key": "",
+      "secret_key": "",
+      "region": "eu-west-3",
+      "ami_name": "ubuntu-springboot-ready",
+      "instance_type": "t2.micro",
+      "source_ami": "ami-0d3f551818b21ed81",
+      "ssh_username": "ubuntu"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "setup.sh"
+    }
+  ]
+}
