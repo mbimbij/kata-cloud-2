@@ -113,5 +113,43 @@ Resources:
         - ''
         - - 'jdbc:mysql://'
           - !GetAtt DBInstance.Endpoint.Address
-          - ':3306/myapp?createDatabaseIfNotExist=true&serverTimezone=UTC'
+          - ':'
+          - !GetAtt DBInstance.Endpoint.Port
+          - '/myapp?createDatabaseIfNotExist=true&serverTimezone=UTC'
       Description: SSM Parameter for database jdbc url
+  MyCodeBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: my-codebuild-project
+      Source:
+        Type: GITHUB
+        Location: https://github.com/mbimbij/kata-cloud-2.git
+#        SourceAuth:
+#          Type: OAUTH
+      Artifacts:
+        Type: NO_ARTIFACTS
+      ServiceRole: arn:aws:iam::870103585828:role/service-role/codebuild-my-build-project-role
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/standard:5.0
+  MyCodeDeployApplication:
+    Type: AWS::CodeDeploy::Application
+    Properties:
+      ApplicationName: my-code-deploy-application
+      ComputePlatform: Server
+  MyCodeDeployDeploymentGroup:
+    Type: AWS::CodeDeploy::DeploymentGroup
+    Properties:
+      ApplicationName: !Ref MyCodeDeployApplication
+      ServiceRoleArn: arn:aws:iam::870103585828:role/codedeploy-service-role
+      DeploymentGroupName: my-deployment-group
+      DeploymentConfigName: CodeDeployDefault.OneAtATime
+      DeploymentStyle:
+        DeploymentType: IN_PLACE
+        DeploymentOption: WITH_TRAFFIC_CONTROL
+      LoadBalancerInfo:
+        ElbInfoList:
+          - Name: MyLoadBalancer
+#        TargetGroupInfoList:
+#          - Name: !GetAtt MyTargetGroup.TargetGroupName
