@@ -58,7 +58,7 @@ public class BeanstalkDemoApplication {
     String entities = StreamSupport.stream(customerRepository.findAll().spliterator(),false)
         .map(Objects::toString)
         .collect(Collectors.joining(","));
-    String response = String.format("Hello Beanstalk - v3 - %s<br>$PORT=%s<br>$SERVER_PORT=%s<br>$MANAGEMENT_SERVER_PORT=%s<br>%s",
+    String response = String.format("Hello Beanstalk - v4 - %s<br>$PORT=%s<br>$SERVER_PORT=%s<br>$MANAGEMENT_SERVER_PORT=%s<br>%s",
         id,
         port,
         serverPort,
