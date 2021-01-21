@@ -70,7 +70,7 @@ Resources:
         - subnet-0c35a5fee9be9c363
         - subnet-08596ca2aca26d7cf
         - subnet-06fc8fb43f9af176f
-  HTTPlistener:
+  MyLoadBalancerListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
       DefaultActions:
@@ -82,3 +82,36 @@ Resources:
       LoadBalancerArn: !Ref MyLoadBalancer
       Port: 80
       Protocol: "HTTP"
+  DBEC2SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Open database for access
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '3306'
+          ToPort: '3306'
+          SourceSecurityGroupName:
+            Ref: Ec2SecurityGroup
+  DBInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBName: mysqlInstance
+      Engine: MySQL
+      MasterUsername: admin
+      DBInstanceClass: db.t2.micro
+      VPCSecurityGroups:
+        - !GetAtt DBEC2SecurityGroup.GroupId
+      AllocatedStorage: 5
+      MasterUserPassword: password
+  DBUrl:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: '/my-app/dev/db-url'
+      Type: String
+      Value:
+        !Join
+        - ''
+        - - 'jdbc:mysql://'
+          - !GetAtt DBInstance.Endpoint.Address
+          - ':3306/myapp?createDatabaseIfNotExist=true&serverTimezone=UTC'
+      Description: SSM Parameter for database jdbc url
