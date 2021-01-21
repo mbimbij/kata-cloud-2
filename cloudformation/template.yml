@@ -145,11 +145,68 @@ Resources:
       ServiceRoleArn: arn:aws:iam::870103585828:role/codedeploy-service-role
       DeploymentGroupName: my-deployment-group
       DeploymentConfigName: CodeDeployDefault.OneAtATime
+      AutoScalingGroups:
+        - !Ref MyAutoScalingGroup
       DeploymentStyle:
         DeploymentType: IN_PLACE
         DeploymentOption: WITH_TRAFFIC_CONTROL
       LoadBalancerInfo:
-        ElbInfoList:
-          - Name: MyLoadBalancer
-#        TargetGroupInfoList:
-#          - Name: !GetAtt MyTargetGroup.TargetGroupName
+        TargetGroupInfoList:
+          - Name: !GetAtt MyTargetGroup.TargetGroupName
+  MyPipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      Name: my-pipeline
+      RoleArn: arn:aws:iam::870103585828:role/service-role/AWSCodePipelineServiceRole-eu-west-3-sb-asg
+      ArtifactStore:
+        Type: S3
+        Location: codepipeline-eu-west-3-971233115494
+      Stages:
+        - Name: Source
+          Actions:
+            - Name: SourceAction
+              ActionTypeId:
+                Category: Source
+                Owner: AWS
+                Version: 1
+                Provider: CodeStarSourceConnection
+              OutputArtifacts:
+                - Name: SourceOutput
+              Configuration:
+                ConnectionArn: arn:aws:codestar-connections:eu-west-3:870103585828:connection/d44a0224-7933-485e-b01b-957c93db9794
+                FullRepositoryId: "mbimbij/kata-cloud-2"
+                BranchName: "main"
+                OutputArtifactFormat: "CODE_ZIP"
+              RunOrder: 1
+        - Name: Build
+          Actions:
+            - Name: Build
+              InputArtifacts:
+                - Name: SourceOutput
+              OutputArtifacts:
+                - Name: BuildOutput
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName:
+                  Ref: MyCodeBuildProject
+              RunOrder: 1
+        - Name: Release
+          Actions:
+            - Name: ReleaseAction
+              InputArtifacts:
+                - Name: SourceOutput
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: 1
+                Provider: CodeDeploy
+              Configuration:
+                ApplicationName:
+                  Ref: MyCodeDeployApplication
+                DeploymentGroupName:
+                  Ref: MyCodeDeployDeploymentGroup
+              RunOrder: 1
