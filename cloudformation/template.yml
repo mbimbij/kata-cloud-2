@@ -117,6 +117,13 @@ Resources:
           - !GetAtt DBInstance.Endpoint.Port
           - '/myapp?createDatabaseIfNotExist=true&serverTimezone=UTC'
       Description: SSM Parameter for database jdbc url
+  DBUsername:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: '/my-app/dev/db-username'
+      Type: String
+      Value: admin
+      Description: SSM Parameter for database jdbc url
   MyCodeBuildProject:
     Type: AWS::CodeBuild::Project
     Properties:
@@ -128,7 +135,7 @@ Resources:
 #          Type: OAUTH
       Artifacts:
         Type: NO_ARTIFACTS
-      ServiceRole: arn:aws:iam::870103585828:role/service-role/codebuild-my-build-project-role
+      ServiceRole: !ImportValue CodebuildMyBuildProjectRole
       Environment:
         Type: LINUX_CONTAINER
         ComputeType: BUILD_GENERAL1_SMALL
